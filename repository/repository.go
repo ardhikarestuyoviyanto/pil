@@ -24,7 +24,7 @@ func (r *repository) DeleteActivity(id int) {
 // GetAllActivity implements domain.AllRepository
 func (r *repository) GetAllActivity() []model.APIResponseActivity {
 	var activity []model.APIResponseActivity
-	r.DB.Table("activities").Scan(&activity)
+	r.DB.Table("activities").Order("id desc").Scan(&activity)
 	return activity
 }
 

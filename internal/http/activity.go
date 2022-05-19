@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"pil/domain"
 	"pil/internal/model"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,8 +28,8 @@ func (s *ActivityEchoController) GetByIdController(c echo.Context) error {
 			"message": "Error internal server",
 		})
 	}
-	id := dataRaw["id"].(float64)
-	activity := s.Service.GetByIdActivity(int(id))
+	id, _ := strconv.Atoi(dataRaw["id"].(string))
+	activity := s.Service.GetByIdActivity(id)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"data": activity,
 	})
@@ -43,7 +44,7 @@ func (s *ActivityEchoController) UpdateController(c echo.Context) error {
 		})
 	}
 
-	id := dataRaw["id"].(float64)
+	id, _ := strconv.Atoi(dataRaw["id"].(string))
 	judul := dataRaw["judul"].(string)
 	deskripsi := dataRaw["deskripsi"].(string)
 	link_yt := dataRaw["link_yt"].(string)
@@ -56,7 +57,7 @@ func (s *ActivityEchoController) UpdateController(c echo.Context) error {
 		LinkDrive: link_drive,
 	}
 
-	s.Service.UpdateActivity(int(id), data)
+	s.Service.UpdateActivity(id, data)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Data updated",
@@ -72,9 +73,9 @@ func (s *ActivityEchoController) DeleteController(c echo.Context) error {
 		})
 	}
 
-	id := dataRaw["id"].(float64)
+	id, _ := strconv.Atoi(dataRaw["id"].(string))
 
-	s.Service.DeleteActivity(int(id))
+	s.Service.DeleteActivity(id)
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Data deleted",
 	})
