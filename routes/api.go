@@ -18,7 +18,7 @@ func AllRoutesAPI(e *echo.Echo, db *gorm.DB, conf config.Config) {
 	}
 	e.POST("/activity", c.CreateController)
 	e.GET("/activity", c.GetAllController)
-	e.GET("/activity/:id", c.GetByIdController)
-	e.PUT("/activity/:id", c.UpdateController)
-	e.DELETE("/activity/:id", c.DeleteController)
+	e.GET("/activity/id", c.GetByIdController)
+	e.PUT("/activity", c.UpdateController)
+	e.DELETE("/activity", c.DeleteController)
 }

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"pil/domain"
 	"pil/internal/model"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -22,25 +21,21 @@ func (s *ActivityEchoController) GetAllController(c echo.Context) error {
 }
 
 func (s *ActivityEchoController) GetByIdController(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Invalid parameter id",
+	dataRaw := echo.Map{}
+	if err := c.Bind(&dataRaw); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Error internal server",
 		})
 	}
-	activity := s.Service.GetByIdActivity(id)
+	id := dataRaw["id"].(float64)
+	activity := s.Service.GetByIdActivity(int(id))
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"data": activity,
 	})
 }
 
 func (s *ActivityEchoController) UpdateController(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Invalid parameter id",
-		})
-	}
+
 	dataRaw := echo.Map{}
 	if err := c.Bind(&dataRaw); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
@@ -48,6 +43,7 @@ func (s *ActivityEchoController) UpdateController(c echo.Context) error {
 		})
 	}
 
+	id := dataRaw["id"].(float64)
 	judul := dataRaw["judul"].(string)
 	deskripsi := dataRaw["deskripsi"].(string)
 	link_yt := dataRaw["link_yt"].(string)
@@ -60,7 +56,7 @@ func (s *ActivityEchoController) UpdateController(c echo.Context) error {
 		LinkDrive: link_drive,
 	}
 
-	s.Service.UpdateActivity(id, data)
+	s.Service.UpdateActivity(int(id), data)
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Data updated",
@@ -69,13 +65,16 @@ func (s *ActivityEchoController) UpdateController(c echo.Context) error {
 }
 
 func (s *ActivityEchoController) DeleteController(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{
-			"message": "Invalid parameter id",
+	dataRaw := echo.Map{}
+	if err := c.Bind(&dataRaw); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Error internal server",
 		})
 	}
-	s.Service.DeleteActivity(id)
+
+	id := dataRaw["id"].(float64)
+
+	s.Service.DeleteActivity(int(id))
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "Data deleted",
 	})
