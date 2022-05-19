@@ -37,7 +37,7 @@ func (r *repository) GetByIdActivity(id int) model.APIResponseActivity {
 
 // UpdateActivity implements domain.AllRepository
 func (r *repository) UpdateActivity(id int, activity model.Activity) {
-	r.DB.Model(&model.Activity{}).Select("judul", "deskripsi", "link").Where("id", id).Updates(activity)
+	r.DB.Model(&model.Activity{}).Select("judul", "deskripsi", "link_yt", "link_drive").Where("id", id).Updates(activity)
 }
 
 func NewRepository(db *gorm.DB) domain.AllRepository {
